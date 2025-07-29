@@ -2,29 +2,56 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import '../index.css'
 
-const Timer = ({ targetDate }) => {
+const Timer = ({ targetDate, initialDays = 8, initialHours = 23, initialMinutes = 55, initialSeconds = 41 }) => {
   const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0
+    days: initialDays,
+    hours: initialHours,
+    minutes: initialMinutes,
+    seconds: initialSeconds
   });
+
+  const [startTime] = useState(() => new Date().getTime());
 
   useEffect(() => {
     const calculateTimeLeft = () => {
-      const now = new Date().getTime();
-      const target = new Date(targetDate).getTime();
-      const difference = target - now;
+      if (targetDate) {
+        // Si se proporciona targetDate, usar lógica original
+        const now = new Date().getTime();
+        const target = new Date(targetDate).getTime();
+        const difference = target - now;
 
-      if (difference > 0) {
-        return {
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-          minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((difference % (1000 * 60)) / 1000)
-        };
+        if (difference > 0) {
+          return {
+            days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+            hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+            minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+            seconds: Math.floor((difference % (1000 * 60)) / 1000)
+          };
+        }
+        return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+      } else {
+        // Lógica de countdown automático desde valores iniciales
+        const now = new Date().getTime();
+        const elapsed = Math.floor((now - startTime) / 1000); // segundos transcurridos
+        
+        // Calcular tiempo total inicial en segundos
+        const totalInitialSeconds = (initialDays * 24 * 60 * 60) + 
+                                  (initialHours * 60 * 60) + 
+                                  (initialMinutes * 60) + 
+                                  initialSeconds;
+        
+        const remainingSeconds = Math.max(0, totalInitialSeconds - elapsed);
+        
+        if (remainingSeconds > 0) {
+          return {
+            days: Math.floor(remainingSeconds / (24 * 60 * 60)),
+            hours: Math.floor((remainingSeconds % (24 * 60 * 60)) / (60 * 60)),
+            minutes: Math.floor((remainingSeconds % (60 * 60)) / 60),
+            seconds: remainingSeconds % 60
+          };
+        }
+        return { days: 0, hours: 0, minutes: 0, seconds: 0 };
       }
-      return { days: 8, hours: 23, minutes: 55, seconds: 41 };
     };
 
     const timer = setInterval(() => {
@@ -35,7 +62,7 @@ const Timer = ({ targetDate }) => {
     setTimeLeft(calculateTimeLeft());
 
     return () => clearInterval(timer);
-  }, [targetDate]);
+  }, [targetDate, startTime, initialDays, initialHours, initialMinutes, initialSeconds]);
 
   const formatNumber = (num) => {
     return num.toString().padStart(2, '0');

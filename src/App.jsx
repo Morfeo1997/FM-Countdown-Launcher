@@ -13,8 +13,8 @@ function App() {
         <div className='vw-100 text-white bg-custom'>
           <Timer />
         </div>
+        <PreFooter />
       </div>
-      <PreFooter />
     </>
   )
 }

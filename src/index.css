@@ -11,22 +11,29 @@
   background-image: url('./assets/bg-images/bg-stars.svg');
   background-size: cover;
   background-position: center;
+  
 }
 
 .bg-prefooter{
   min-width: 100dvw;
+  padding: 0;
+  margin: 0;
+  min-height: 197px;
   background-image: url('./assets/bg-images/pattern-hills.svg');
   background-size: cover;
   background-position: center;
+  display: flex;
+  
 }
 
 .bg-main-container{
   background-color: var(--Very-dark-mostly-black-blue);
+  overflow-x: hidden;
 }
 
 .timer-container {
   color: white;
-  min-height: 100vh;
+  min-height: 80dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -75,6 +82,15 @@
   margin-top: 0.5rem;
   text-transform: uppercase;
   }
+
+  .logos{
+    fill: var(--Grayish-blue);
+    cursor: pointer;
+  }
+
+.logos:hover{
+  fill: var(--Soft-red);
+}
 
         /* Responsive adjustments */
 @media (max-width: 768px) {
