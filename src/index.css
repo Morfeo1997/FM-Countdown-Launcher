@@ -23,7 +23,10 @@
   background-size: cover;
   background-position: center;
   display: flex;
-  
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
 }
 
 .bg-main-container{
@@ -83,13 +86,24 @@
   text-transform: uppercase;
   }
 
-  .logos{
+.logos{
     fill: var(--Grayish-blue);
     cursor: pointer;
   }
 
 .logos:hover{
   fill: var(--Soft-red);
+}
+
+.links{
+  color: var(--Grayish-blue);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.links:hover{
+  color: var(--Soft-red);
+  transition-duration: 500ms;
 }
 
         /* Responsive adjustments */
