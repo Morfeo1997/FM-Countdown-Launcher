@@ -53,7 +53,7 @@
 
 .timer-card {
   background: var(--Dark-desaturated-blue);
-  border-radius: 16px;
+  border-radius: 16px 16px 8px 8px;
   padding: 1.5rem 1rem;
   margin: 0.5rem;
   backdrop-filter: blur(10px);
@@ -85,6 +85,214 @@
   margin-top: 0.5rem;
   text-transform: uppercase;
   }
+
+.flip-card-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+
+ .flip-card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.flip-card-face-front {
+  transform: rotateX(0deg);
+}
+
+.flip-card-face-back {
+  transform: rotateX(180deg);
+}
+
+.flip-card-top-half, .flip-card-bottom-half {
+  position: absolute;
+  width: 100%;
+  height: 50%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flip-card-half {
+  position: relative;
+  width: 100%;
+  height: 50%;
+  overflow: hidden;
+  background: var(--Dark-desaturated-blue);
+}
+
+.flip-card-top-half {
+  top: 0;
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+
+.flip-card-bottom-half {
+  bottom: 0;
+  border-top: 1px solid rgba(0,0,0,0.2);
+}
+
+.flip-card-top-half .timer-number {
+  position: absolute;
+  bottom: 0;
+}
+
+.flip-card-bottom-half .timer-number {
+  position: absolute;
+  top: 0;
+}
+
+.flip-card-face-top {
+  border-bottom: 1px solid rgba(0,0,0,0.2); /* Sutil línea divisoria */
+  /* Propiedades de flexbox para el número */
+}
+
+.flip-card-face-bottom {
+  top: 50%;
+  border-top: 1px solid rgba(0,0,0,0.2); /* Sutil línea divisoria */
+  /* Propiedades de flexbox para el número */
+}
+
+.flip-card-half.top{
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.flip-card-half.top .timer-number {
+  position: absolute;
+  bottom: 0;
+}
+
+.flip-card-half.bottom {
+  border-top: 1px solid rgba(0,0,0,0.2);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.flip-card-half.bottom .timer-number {
+  position: absolute;
+  top: 0;
+}
+
+.flip-card-face-top .timer-number {
+  transform: translateY(50%); /* Mueve el número para que solo se vea la mitad superior */
+}
+
+.flip-card-face-bottom .timer-number {
+  transform: translateY(-50%); /* Mueve el número para que solo se vea la mitad inferior */
+}
+
+.timer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.timer-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Timer Card Styles */
+.timer-card-wrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  perspective: 1000px;
+}
+
+.timer-card-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--Dark-desaturated-blue);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Timer Halves */
+.timer-half {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.timer-half-top {
+  top: 0;
+  background: var(--Dark-desaturated-blue);
+  border-bottom: 1px solid rgba(0,0,0,0.3);
+  z-index: 2;
+}
+
+.timer-half-bottom {
+  bottom: 0;
+  background: hsl(236, 21%, 22%);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  z-index: 1;
+}
+
+/* Animated Half */
+.timer-half-animated {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: var(--Dark-desaturated-blue);
+  transform-origin: center top;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 3;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+/* Timer Numbers */
+.timer-number {
+  font-size: 50px;
+  font-weight: 700;
+  color: var(--Soft-red);
+  line-height: 1;
+}
+
+.timer-number-top {
+  transform: translateY(50%);
+}
+
+.timer-number-bottom {
+  transform: translateY(-50%);
+}
 
 .logos{
     fill: var(--Grayish-blue);
@@ -118,6 +326,19 @@
   margin-bottom: 2rem !important;
   line-height: 1.2;
   }
+.timer-grid {
+    gap: 1.5rem;
+    padding: 0 0.5rem;
+  }
+  
+.timer-card-wrapper {
+    width: 80px;
+    height: 80px;
+  }
+  
+.timer-number {
+    font-size: 2.2rem;
+  }
 }
 
 @media (max-width: 576px) {
@@ -125,13 +346,27 @@
 .timer-number-container {
   height: 50px;
   }
+.timer-grid {
+    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+  
+.timer-card-wrapper {
+    width: 70px;
+    height: 70px;
+  }
+  
+.timer-number {
+    font-size: 2.2rem;
+  }
 }
 
         /* Hover effects para desktop */
 @media (hover: hover) {
 
 .timer-card:hover {
-  background: rgba(73, 91, 127, 0.9);
+  background: var(--Dark-desaturated-blue);
   transform: translateY(-2px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
   }

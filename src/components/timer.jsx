@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import '../index.css'
+import { motion } from 'framer-motion';
 
 const Timer = ({ targetDate, initialDays = 8, initialHours = 23, initialMinutes = 55, initialSeconds = 41 }) => {
   const [timeLeft, setTimeLeft] = useState({
@@ -10,12 +9,12 @@ const Timer = ({ targetDate, initialDays = 8, initialHours = 23, initialMinutes 
     seconds: initialSeconds
   });
 
+  const [previousTimeLeft, setPreviousTimeLeft] = useState(timeLeft);
   const [startTime] = useState(() => new Date().getTime());
 
   useEffect(() => {
     const calculateTimeLeft = () => {
       if (targetDate) {
-        // Si se proporciona targetDate, usar lógica original
         const now = new Date().getTime();
         const target = new Date(targetDate).getTime();
         const difference = target - now;
@@ -30,11 +29,9 @@ const Timer = ({ targetDate, initialDays = 8, initialHours = 23, initialMinutes 
         }
         return { days: 0, hours: 0, minutes: 0, seconds: 0 };
       } else {
-        // Lógica de countdown automático desde valores iniciales
         const now = new Date().getTime();
-        const elapsed = Math.floor((now - startTime) / 1000); // segundos transcurridos
+        const elapsed = Math.floor((now - startTime) / 1000);
         
-        // Calcular tiempo total inicial en segundos
         const totalInitialSeconds = (initialDays * 24 * 60 * 60) + 
                                   (initialHours * 60 * 60) + 
                                   (initialMinutes * 60) + 
@@ -55,127 +52,76 @@ const Timer = ({ targetDate, initialDays = 8, initialHours = 23, initialMinutes 
     };
 
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
+      setPreviousTimeLeft(timeLeft);
+      const newTimeLeft = calculateTimeLeft();
+      setTimeLeft(newTimeLeft);
     }, 1000);
 
-    // Inicializar inmediatamente
-    setTimeLeft(calculateTimeLeft());
-
     return () => clearInterval(timer);
-  }, [targetDate, startTime, initialDays, initialHours, initialMinutes, initialSeconds]);
+  }, [targetDate, startTime, initialDays, initialHours, initialMinutes, initialSeconds, timeLeft]);
 
   const formatNumber = (num) => {
     return num.toString().padStart(2, '0');
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        staggerChildren: 0.2,
-        ease: "easeOut"
-      }
-    }
-  };
-
-  const titleVariants = {
-    hidden: { opacity: 0, y: -30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut"
-      }
-    }
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, scale: 0.8, y: 30 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut"
-      }
-    },
-    hover: {
-      scale: 1.05,
-      transition: {
-        duration: 0.3,
-        ease: "easeInOut"
-      }
-    }
-  };
-
-  const numberVariants = {
-    initial: { y: 0 },
-    animate: { y: 0 },
-    exit: { y: -20, opacity: 0 },
-    enter: { y: 20, opacity: 0 }
-  };
-
   const timeUnits = [
-    { value: timeLeft.days, label: 'DAYS', key: 'days' },
-    { value: timeLeft.hours, label: 'HOURS', key: 'hours' },
-    { value: timeLeft.minutes, label: 'MINUTES', key: 'minutes' },
-    { value: timeLeft.seconds, label: 'SECONDS', key: 'seconds' }
+    { value: timeLeft.days, previousValue: previousTimeLeft.days, label: 'DAYS' },
+    { value: timeLeft.hours, previousValue: previousTimeLeft.hours, label: 'HOURS' },
+    { value: timeLeft.minutes, previousValue: previousTimeLeft.minutes, label: 'MINUTES' },
+    { value: timeLeft.seconds, previousValue: previousTimeLeft.seconds, label: 'SECONDS' }
   ];
 
   return (
-    <motion.div 
-      className="timer-container text-center py-5"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      {/* Título */}
-      <motion.h1 
-        className="timer-title mb-5"
-        variants={titleVariants}
-      >
+    <div className="timer-container text-center py-5">
+      <h1 className="timer-title mb-5">
         WE'RE LAUNCHING SOON
-      </motion.h1>
+      </h1>
 
-      {/* Contador */}
-      <div className="container">
-        <div className="row justify-content-center g-3 g-md-4">
-          {timeUnits.map((unit, index) => (
-            <div key={unit.key} className="col-6 col-md-3 col-lg-2">
-              <motion.div
-                className="timer-card"
-                variants={cardVariants}
-                whileHover="hover"
-                whileTap={{ scale: 0.95 }}
-              >
-                <div className="timer-number-container">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={unit.value}
-                      className="timer-number"
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: -20, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                    >
-                      {formatNumber(unit.value)}
-                    </motion.div>
-                  </AnimatePresence>
+      <div className="timer-grid">
+        {timeUnits.map((unit, index) => (
+          <div key={index} className="timer-unit">
+            
+            <div className="timer-card-wrapper">
+              <div className="timer-card-container">
+                
+                <div className="timer-half timer-half-top">
+                  <span className="timer-number timer-number-top">
+                    {formatNumber(unit.value)}
+                  </span>
                 </div>
-                <div className="timer-label">
-                  {unit.label}
+
+                <div className="timer-half timer-half-bottom">
+                  <span className="timer-number timer-number-bottom">
+                    {formatNumber(unit.value)}
+                  </span>
                 </div>
-              </motion.div>
+
+                {unit.value !== unit.previousValue && (
+                  <motion.div
+                    className="timer-half-animated"
+                    initial={{ rotateX: 0 }}
+                    animate={{ rotateX: -90 }}
+                    transition={{ 
+                      duration: 0.6, 
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <span className="timer-number timer-number-bottom">
+                      {formatNumber(unit.previousValue)}
+                    </span>
+                  </motion.div>
+                )}
+              </div>
             </div>
-          ))}
-        </div>
+
+            <div className="timer-label">
+              {unit.label}
+            </div>
+
+          </div>
+        ))}
       </div>
-    </motion.div>
+    </div>
   );
 };
 
